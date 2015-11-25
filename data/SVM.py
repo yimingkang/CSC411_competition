@@ -12,13 +12,14 @@ def train_SVM():
     (x, y, n_images) = train["tr_images"].shape
 
     train_img = np.reshape(np.swapaxes(train["tr_images"], 0, 2), (n_images, x * y))
-    plt.imshow(np.swapaxes(np.reshape(train_img[0], (y, x)), 0, 1), cmap=pylab.gray())
-    plt.show()
+    #plt.imshow(np.swapaxes(np.reshape(train_img[0], (y, x)), 0, 1), cmap=pylab.gray())
+    #plt.show()
 
-    clf = svm.SVC()
-    #clf = svm.SVC(kernel='linear', C=1)
-    scores = cross_validation.cross_val_score(clf, train_img, np.reshape(train["tr_labels"], (n_images, )) , cv=5)
-    print scores
+    #clf = svm.SVC()
+    for c in [0.001, 0.01, 0.1, 0.2, 0.5, 0.8, 0.9, 1, 10, 20, 100]:
+        clf = svm.SVC(kernel='linear', C=c)
+        scores = cross_validation.cross_val_score(clf, train_img, np.reshape(train["tr_labels"], (n_images, )) , cv=10)
+        print scores.mean()
     return clf
 
 def classify(classifier, samples):
