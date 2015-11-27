@@ -15,9 +15,25 @@ def train_SVM():
     #plt.imshow(np.swapaxes(np.reshape(train_img[0], (y, x)), 0, 1), cmap=pylab.gray())
     #plt.show()
 
-    #clf = svm.SVC()
-    for c in [0.001, 0.01, 0.1, 0.2, 0.5, 0.8, 0.9, 1, 10, 20, 100]:
-        clf = svm.SVC(kernel='linear', C=c)
+    experiment = ["poly", "sigmoid"]
+
+    # iterate through all linear
+    if "linear" in experiment:
+        for c in [0.001, 0.01, 0.1, 0.2, 0.5, 0.8, 0.9, 1, 10, 20, 100]:
+            clf = svm.SVC(kernel='linear', C=c)
+            scores = cross_validation.cross_val_score(clf, train_img, np.reshape(train["tr_labels"], (n_images, )) , cv=10)
+            print scores.mean()
+
+    # iterate through all poly
+    if "poly" in experiment:
+        for deg in xrange(1, 3):
+            clf = svm.SVC(kernel='poly', degree=deg)
+            scores = cross_validation.cross_val_score(clf, train_img, np.reshape(train["tr_labels"], (n_images, )) , cv=250)
+            print "POLY: ", deg,  " MAX: ", scores.max(), " MIN: ", scores.min(), " MEAN: ", scores.mean()
+
+    # iterate through all sigmoid
+    if "sigmoid" in experiment:
+        clf = svm.SVC(kernel='sigmoid')
         scores = cross_validation.cross_val_score(clf, train_img, np.reshape(train["tr_labels"], (n_images, )) , cv=10)
         print scores.mean()
     return clf
