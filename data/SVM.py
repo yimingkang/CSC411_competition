@@ -1,9 +1,24 @@
-import scipy.io
-import pylab
-import matplotlib.pyplot as plt
-import numpy as np
-from sklearn import svm
-from sklearn import cross_validation
+def preproc():
+    # first compute the average brightness
+    test = scipy.io.loadmat('labeled_images.mat')['tr_images']
+    print "Shape of test images is : ", test.shape
+    (x, y, n_images) = test.shape
+    train_img = np.reshape(np.swapaxes(test, 0, 2), (n_images, x * y))
+    print "Shape of transformed image is : ", train_img.shape
+    avg_array = []
+    for i in xrange(n_images):
+        avg_array.append(train_img[i].mean())
+
+    # the histogram of the data
+    n, bins, patches = plt.hist(avg_array, 50, normed=1, facecolor='green', alpha=0.75)
+
+    plt.xlabel('Brightness')
+    plt.ylabel('Probability')
+    plt.title("Avg brightness distribution")
+    plt.grid(True)
+
+    plt.show()
+
 
 def train_SVM():
     train = scipy.io.loadmat('labeled_images.mat')
@@ -49,8 +64,16 @@ def classify_pub_test(classifier):
 
 
 def main():
-    classifier = train_SVM()
+    preproc()
+    #classifier = train_SVM()
     #classify_pub_test(None)
 
 if __name__ == '__main__':
+    print "Importing libs..."
+    import scipy.io
+    import pylab
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from sklearn import svm
+    from sklearn import cross_validation
     main()
