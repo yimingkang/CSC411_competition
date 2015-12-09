@@ -30,27 +30,12 @@ def train_SVM():
     #plt.imshow(np.swapaxes(np.reshape(train_img[0], (y, x)), 0, 1), cmap=pylab.gray())
     #plt.show()
 
-    experiment = ["poly", "sigmoid"]
+    clf = svm.SVC(kernel='poly', degree=2)
+    clf.fit(train_img, np.reshape(train["tr_labels"], (n_images, )))
+    scores = cross_validation.cross_val_score(clf, train_img, np.reshape(train["tr_labels"], (n_images, )) , cv=3)
 
-    # iterate through all linear
-    if "linear" in experiment:
-        for c in [0.001, 0.01, 0.1, 0.2, 0.5, 0.8, 0.9, 1, 10, 20, 100]:
-            clf = svm.SVC(kernel='linear', C=c)
-            scores = cross_validation.cross_val_score(clf, train_img, np.reshape(train["tr_labels"], (n_images, )) , cv=10)
-            print scores.mean()
-
-    # iterate through all poly
-    if "poly" in experiment:
-        for deg in xrange(1, 3):
-            clf = svm.SVC(kernel='poly', degree=deg)
-            scores = cross_validation.cross_val_score(clf, train_img, np.reshape(train["tr_labels"], (n_images, )) , cv=10)
-            print "POLY: ", deg,  " MAX: ", scores.max(), " MIN: ", scores.min(), " MEAN: ", scores.mean()
-
-    # iterate through all sigmoid
-    if "sigmoid" in experiment:
-        clf = svm.SVC(kernel='sigmoid')
-        scores = cross_validation.cross_val_score(clf, train_img, np.reshape(train["tr_labels"], (n_images, )) , cv=10)
-        print scores.mean()
+    print scores
+    print scores.mean()
     return clf
 
 def classify(classifier, samples):
@@ -60,13 +45,27 @@ def classify_pub_test(classifier):
     test = scipy.io.loadmat('public_test_images.mat')
     print test
     print test["public_test_images"].shape
-    #return classifier.predict(samples)
-
+    (x, y, n_images) = test["public_test_images"].shape
+    test_img = np.reshape(np.swapaxes(test["public_test_images"], 0, 2), (n_images, x * y))
+    return classifier.predict(test_img)
 
 def main():
-    preproc()
-    #classifier = train_SVM()
-    #classify_pub_test(None)
+    # preproc()
+    print "Training SVM..."
+    classifier = train_SVM()
+    print "Classifing..."
+    classify_result = classify_pub_test(classifier)
+    cls_res_list = list(classify_result)
+    print cls_res_list
+    with open('submit.csv', 'w') as f:
+        f.write('Id,Prediction\n')
+        index = 1
+        for pred in cls_res_list:
+            f.write('%d,%d\n'%(index, pred))
+            index += 1
+        while index<=1253:
+            f.write('%d,0\n'%(index))
+            index+=1
 
 if __name__ == '__main__':
     print "Importing libs..."
@@ -76,4 +75,5 @@ if __name__ == '__main__':
     import numpy as np
     from sklearn import svm
     from sklearn import cross_validation
+    print "Done!"
     main()
