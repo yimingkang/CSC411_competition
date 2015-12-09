@@ -28,7 +28,7 @@ def train_SVM():
     if "poly" in experiment:
         for deg in xrange(1, 3):
             clf = svm.SVC(kernel='poly', degree=deg)
-            scores = cross_validation.cross_val_score(clf, train_img, np.reshape(train["tr_labels"], (n_images, )) , cv=250)
+            scores = cross_validation.cross_val_score(clf, train_img, np.reshape(train["tr_labels"], (n_images, )) , cv=10)
             print "POLY: ", deg,  " MAX: ", scores.max(), " MIN: ", scores.min(), " MEAN: ", scores.mean()
 
     # iterate through all sigmoid
