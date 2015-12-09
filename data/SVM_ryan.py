@@ -62,16 +62,19 @@ def get_training_data():
     train_img = np.reshape(np.swapaxes(train["tr_images"], 0, 2), (n_images, x * y))
     return train_img, train['tr_labels']
 
-def get_filtered_training_data():
+def get_filtered_training_data(normalize=True):
     train = scipy.io.loadmat('labeled_images.mat')
-    filtered = scipy.io.loadmat('filtered_testimg.mat')
+    if normalize:
+        filtered = scipy.io.loadmat('filtered_normalized.mat')
+    else:
+        filtered = scipy.io.loadmat('filtered_testimg.mat')
     print "Filtered training set: ", filtered['tr_images'].shape
 
     return filtered['tr_images'], train['tr_labels']
 
 def train_SVM():
     # train EYES only
-    train_img_original, train_labels = get_filtered_training_data()
+    train_img_original, train_labels = get_filtered_training_data(normalize=True)
     n_images, _ = train_img_original.shape
     train_img = np.ndarray((n_images, 32 * 20))
     
@@ -83,7 +86,7 @@ def train_SVM():
             img = img[:, 12:].ravel()
             train_img[i] = img
     else:
-        train_img = normalize(train_img_original)
+        train_img = train_img_original
 
     experiment = ["linear", "poly"]
 
