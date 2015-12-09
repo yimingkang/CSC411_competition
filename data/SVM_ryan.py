@@ -1,43 +1,35 @@
-def preproc():
-    # first compute the average brightness
-    test = scipy.io.loadmat('labeled_images.mat')['tr_images']
-    print "Shape of test images is : ", test.shape
-    (x, y, n_images) = test.shape
-    train_img = np.reshape(np.swapaxes(test, 0, 2), (n_images, x * y))
-    print "Shape of transformed image is : ", train_img.shape
-    
+def double_rainbow():
+    train_img, train_labels = get_training_data()
+    return normalize(equalize_hist(train_img)), train_labels
 
-    #for row in xrange(n_images):
-    #    train_img[row] = preprocessing.scale(train_img[row])
+def normalize(train_img):
+    return preprocessing.scale(train_img * 1.0, axis=1)
 
-    avg_array = []
+def equalize_hist(train_img):
+    n_images, _ = train_img.shape
     for i in xrange(n_images):
-        avg_array.append(train_img[i].mean())
+        img = train_img[0]
+        train_img[0] = exposure.equalize_hist(img.reshape(32, 32)).ravel()
+    return train_img
 
-    # the histogram of the data
-    n, bins, patches = plt.hist(avg_array, 50, normed=1, facecolor='green', alpha=0.75)
+def get_equalized_data():
+    # Load an example image
+    train_img, train_labels = get_training_data()
+    return equalize_hist(train_img), train_labels 
 
-    plt.xlabel('Brightness')
-    plt.ylabel('Probability')
-    plt.title("Avg brightness distribution")
-    plt.grid(True)
-    plt.show()
+def get_normalized_data():
+    # Load an example image
+    train_img, train_labels = get_training_data()
+    return normalize(train_img), train_labels
 
-def get_training_data(normalize=True):
+def get_training_data():
     train = scipy.io.loadmat('labeled_images.mat')
     (x, y, n_images) = train["tr_images"].shape
-    print "Shape of original: ", train["tr_images"].shape
     train_img = np.reshape(np.swapaxes(train["tr_images"], 0, 2), (n_images, x * y))
-    print "Shape of reshaped: ", train_img.shape
-
-    if normalize:
-        train_img = preprocessing.scale(train_img * 1.0, axis=1)
-
-    show_img(train_img[0])
     return train_img, train['tr_labels']
 
 def train_SVM():
-    train_img, train_labels = get_training_data(normalize=True)
+    train_img, train_labels = get_equalized_data()
     n_images, _ = train_img.shape
     experiment = ["linear", "poly", "sigmoid"]
 
@@ -78,6 +70,7 @@ def show_img(img):
 def main():
     #preproc()
     #get_training_data()
+    #get_equalized_data()
     classifier = train_SVM()
     #classify_pub_test(None)
 
@@ -90,5 +83,7 @@ if __name__ == '__main__':
     from sklearn import svm
     from sklearn import cross_validation
     from sklearn import preprocessing
+    from skimage import exposure
+    from skimage import data
     print "done!"
     main()
