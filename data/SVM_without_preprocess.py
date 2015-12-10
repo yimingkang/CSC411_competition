@@ -9,8 +9,8 @@ def train_SVM():
     #plt.imshow(np.swapaxes(np.reshape(train_img[0], (y, x)), 0, 1), cmap=pylab.gray())
     #plt.show()
 
-    # clf = svm.SVC(kernel='poly', degree=2)
-    clf = svm.SVC(kernel='linear', C=10)
+    clf = svm.SVC(kernel='poly', degree=3)
+    # clf = svm.SVC(kernel='linear', C=10)
     clf.fit(train_img, np.reshape(train["tr_labels"], (n_images, )))
     # scores = cross_validation.cross_val_score(clf, train_img, np.reshape(train["tr_labels"], (n_images, )) , cv=3)
 
@@ -36,7 +36,7 @@ def main():
     print "Classifing..."
     cls_res_list = classify_pub_test(classifier)
     print cls_res_list
-    with open('submit_svm_linear.csv', 'w') as f:
+    with open('submit_svm_poly3.csv', 'w') as f:
         f.write('Id,Prediction\n')
         index = 1
         for pred in cls_res_list:
