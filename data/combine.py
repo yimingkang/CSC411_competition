@@ -1,6 +1,8 @@
 csv_name = 'submit_svm_linear.csv'
+# csv_name = './Submissions/prediction_ensemble.csv'
 # file_lsts = ['submit_svm_poly2.csv', 'submit_svm_linear.csv',  'submit_svm_poly3.csv', 'submit_non-normalized_poly2.csv', 'submit_normalized_linear.csv', 'submit_normalized_poly2.csv']
 file_lsts = ['submit_svm_poly2.csv', 'submit_svm_linear.csv',  'submit_svm_poly3.csv', './Submissions/prediction_ensemble.csv', './Submissions/preddiction_nn_hu_15_gabor_pca_100.csv', './Submissions/prediction_final_multiclass_10000_0006.csv']
+# file_lsts = ['./Submissions/prediction_ensemble.csv', './Submissions/preddiction_nn_hu_15_gabor_pca_100.csv', './Submissions/prediction_final_multiclass_10000_0006.csv']
 predictions=dict()
 
 wrong_prediction_files=dict()
