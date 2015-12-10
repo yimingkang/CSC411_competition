@@ -1,8 +1,15 @@
-csv_name = 'submit_svm_linear.csv'
 # csv_name = './Submissions/prediction_ensemble.csv'
-# file_lsts = ['submit_svm_poly2.csv', 'submit_svm_linear.csv',  'submit_svm_poly3.csv', 'submit_non-normalized_poly2.csv', 'submit_normalized_linear.csv', 'submit_normalized_poly2.csv']
-file_lsts = ['submit_svm_poly2.csv', 'submit_svm_linear.csv',  'submit_svm_poly3.csv', './Submissions/prediction_ensemble.csv', './Submissions/preddiction_nn_hu_15_gabor_pca_100.csv', './Submissions/prediction_final_multiclass_10000_0006.csv']
-# file_lsts = ['./Submissions/prediction_ensemble.csv', './Submissions/preddiction_nn_hu_15_gabor_pca_100.csv', './Submissions/prediction_final_multiclass_10000_0006.csv']
+# file_lsts_svm_no_filter = ['submit_svm_poly2.csv']
+file_lsts_svm_no_filter = ['./submit_combine_all_svm_and_submission.csv']
+file_lsts_svm_no_filter = ['./submit_combine_no_preprocess.csv']
+file_lsts_svm = ['./submit_no_normalized_linear.csv', './submit_no_normalized_poly2.csv']
+# file_lsts_sub = ['./Submissions/prediction_ensemble.csv', './Submissions/preddiction_nn_hu_15_gabor_pca_100.csv', './Submissions/prediction_final_multiclass_10000_0006.csv']
+file_lsts_sub = ['./Submissions/prediction_ensemble.csv']
+file_lsts_nn = ['./submit_combine_all_cnn.csv', './ENV/NN_MLP.csv', './ENV/submit_nn_sing_layer_90_units_100iter_non_normalized.csv', './ENV/submit_nn_sing_layer_90_units_100iter_normalized.csv']
+# file_lsts_cnn = ['./ENV/submit_cnn_with_normalization_2.csv', './ENV/submit_cnn_with_normalization_3.csv', './ENV/submit_cnn_with_normalization.csv']
+file_lsts = file_lsts_svm_no_filter+file_lsts_svm+file_lsts_sub+file_lsts_nn
+# file_lsts = file_lsts_cnn
+csv_name = file_lsts[0]
 predictions=dict()
 
 wrong_prediction_files=dict()
@@ -35,7 +42,7 @@ for i in xrange(len(predictions[csv_name])):
         print [(fi, predictions[fi][i]) for fi in wrong_preds]
     result_lst.append(int(p))
 
-with open('submit_combine_no_preprocess.csv', 'w') as f:
+with open('submit_combine_testing.csv', 'w') as f:
     f.write('Id,Prediction\n')
     index = 1
     for pred in result_lst:
@@ -46,6 +53,9 @@ with open('submit_combine_no_preprocess.csv', 'w') as f:
         index+=1
 
 print '+'*20
+print "Total number of .csv files: %d"%len(file_lsts)
+wrong_prediction_files_sorted = sorted(wrong_prediction_files.items(), key=lambda x: x[1])
+print wrong_prediction_files_sorted
 for wpf in wrong_prediction_files:
     print wpf, wrong_prediction_files[wpf]
 print '+'*20
