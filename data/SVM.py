@@ -1,5 +1,5 @@
 def train_SVM():
-    train = scipy.io.loadmat('filtered_testimg.mat')
+    train = scipy.io.loadmat('./filtered_normalized.mat')
     train_original = scipy.io.loadmat('labeled_images.mat')
 
     print "Shape of tr_images is: ", train["tr_images"].shape
@@ -24,24 +24,24 @@ def classify(classifier, samples):
     return classifier.predict(samples)
 
 def classify_pub_test(classifier):
-    test = scipy.io.loadmat('public_test_filtered_no_normalization.mat')
-    print test
-    print test["public_test_images"].shape
-    # (x, y, n_images) = test["public_test_images"].shape
-    (n_images, dim) = test["public_test_images"].shape
-    # test_img = np.reshape(np.swapaxes(test["public_test_images"], 0, 2), (n_images, x * y))
-    test_img = test['public_test_images']
-    return classifier.predict(test_img)
+    pub_test = scipy.io.loadmat('./public_test_normalized.mat')
+    hid_test = scipy.io.loadmat('./hidden_test_images_filtered_normalized.mat')
+    (n_images, dim) = pub_test["public_test_images"].shape
+    test_img = pub_test['public_test_images']
+    pub_res = list(classifier.predict(test_img))
+    (n_images, dim) = hid_test["hidden_img"].shape
+    test_img = hid_test['hidden_img']
+    hid_res = list(classifier.predict(test_img))
+    return pub_res+hid_res
 
 def main():
     # preproc()
     print "Training SVM..."
     classifier = train_SVM()
     print "Classifing..."
-    classify_result = classify_pub_test(classifier)
-    cls_res_list = list(classify_result)
+    cls_res_list = classify_pub_test(classifier)
     print cls_res_list
-    with open('submit_non-normalized_poly2.csv', 'w') as f:
+    with open('submit_normalized_poly2.csv', 'w') as f:
         f.write('Id,Prediction\n')
         index = 1
         for pred in cls_res_list:
