@@ -1,12 +1,11 @@
 # file_lsts_svm_no_filter = ['submit_svm_poly2.csv']
-file_lsts_svm_no_filter = ['./submit_combine_all_svm_and_submission.csv']
 file_lsts_svm_no_filter = ['./submit_combine_no_preprocess.csv']
 file_lsts_svm = ['./submit_no_normalized_linear.csv', './submit_no_normalized_poly2.csv']
 file_lsts_nn = ['./ENV/submit_nn_sing_layer_90_units_100iter_non_normalized.csv', './ENV/submit_nn_sing_layer_90_units_100iter_normalized.csv']
 # file_lsts_cnn = ['./ENV/submit_cnn_with_normalization_2.csv', './ENV/submit_cnn_with_normalization_3.csv', './ENV/submit_cnn_with_normalization.csv']
 rbf = ['./submit_non-normalized_rbf10.csv']
 rbf_normalized = ['./submit_filtered_rbf10.csv']
-file_lsts = rbf_normalized + rbf + file_lsts_svm
+file_lsts = rbf_normalized + rbf + file_lsts_nn
 # file_lsts = file_lsts_cnn
 csv_name = file_lsts[0]
 predictions=dict()
