@@ -1,10 +1,7 @@
-# csv_name = './Submissions/prediction_ensemble.csv'
 # file_lsts_svm_no_filter = ['submit_svm_poly2.csv']
 file_lsts_svm_no_filter = ['./submit_combine_all_svm_and_submission.csv']
 file_lsts_svm_no_filter = ['./submit_combine_no_preprocess.csv']
 file_lsts_svm = ['./submit_no_normalized_linear.csv', './submit_no_normalized_poly2.csv']
-# file_lsts_sub = ['./Submissions/prediction_ensemble.csv', './Submissions/preddiction_nn_hu_15_gabor_pca_100.csv', './Submissions/prediction_final_multiclass_10000_0006.csv']
-file_lsts_sub = ['./Submissions/prediction_ensemble.csv']
 file_lsts_nn = ['./ENV/submit_nn_sing_layer_90_units_100iter_non_normalized.csv', './ENV/submit_nn_sing_layer_90_units_100iter_normalized.csv']
 # file_lsts_cnn = ['./ENV/submit_cnn_with_normalization_2.csv', './ENV/submit_cnn_with_normalization_3.csv', './ENV/submit_cnn_with_normalization.csv']
 rbf = ['./submit_non-normalized_rbf10.csv']
