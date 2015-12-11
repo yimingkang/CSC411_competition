@@ -73,14 +73,14 @@ def get_filtered_training_data(normalize=True):
     return filtered['tr_images'], train['tr_labels']
 
 def train_SVM():
-    # train EYES only
-    train_img_original, train_labels = get_filtered_training_data(normalize=True)
+    train_img_original, train_labels = get_training_data()
     n_images, _ = train_img_original.shape
     train_img = np.ndarray((n_images, 32 * 20))
     
     train_parts = False
     if train_parts:
         for i in xrange(n_images):
+            # train eyes only
             img = train_img_original[i]
             img = img.reshape(32, 32)
             img = img[:, 12:].ravel()
@@ -88,14 +88,14 @@ def train_SVM():
     else:
         train_img = train_img_original
 
-    experiment = ["linear", "poly"]
+    experiment = ["rbf", "sigmoid", "linear", "poly"]
 
     # iterate through all linear
     if "rbf" in experiment:
-        for c in [0.01, 0.1, 1]:
+        for c in [10]:
             clf = svm.SVC(kernel='rbf', C=c) 
             scores = cross_validation.cross_val_score(clf, train_img, np.reshape(train_labels, (n_images, )) , cv=5)
-            print "linear mean: ", scores.mean()
+            print "rbf mean @C=", c, ": ", scores.mean()
 
     # iterate through all linear
     if "linear" in experiment:
@@ -106,7 +106,7 @@ def train_SVM():
 
     # iterate through all poly
     if "poly" in experiment:
-        for deg in xrange(1, 6):
+        for deg in xrange(1, 4):
             clf = svm.SVC(kernel='poly', degree=deg)
             scores = cross_validation.cross_val_score(clf, train_img, np.reshape(train_labels, (n_images, )) , cv=5)
             print "POLY: ", deg,  " MAX: ", scores.max(), " MIN: ", scores.min(), " MEAN: ", scores.mean()
